@@ -1,0 +1,10 @@
+django
+djangorestframework
+djangorestframework_simplejwt
+python-decouple
+psycopg2-binary
+pillow
+drf-yasg
+django_filter
+dj_config_url
+celery[redis]
