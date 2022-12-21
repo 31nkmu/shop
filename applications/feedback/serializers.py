@@ -17,3 +17,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = '__all__'
+
+
+class RatingSerializer(serializers.Serializer):
+    rating = serializers.IntegerField(min_value=1, max_value=5, required=True)

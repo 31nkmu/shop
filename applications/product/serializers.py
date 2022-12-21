@@ -1,6 +1,7 @@
+from django.db.models import Avg
 from rest_framework import serializers
 
-from applications.feedback.models import Like
+from applications.feedback.models import Like, Rating
 from applications.product.models import Category, Product, Image
 
 
@@ -64,5 +65,11 @@ class ProductSerializer(serializers.ModelSerializer):
             product=instance,
             like=True
         ).count()
+        rep['rating'] = Rating.objects.filter(
+            owner=request.user,
+            product=instance
+        ).aggregate(Avg('rating'))['rating__avg']
+        if not rep['rating']:
+            rep['rating'] = 0
         return rep
 

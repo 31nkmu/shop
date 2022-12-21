@@ -7,7 +7,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
-from applications.feedback.models import Like
+from applications.feedback.models import Like, Rating
+from applications.feedback.serializers import RatingSerializer
 from applications.product.models import Product, Category
 from applications.product.serializers import ProductSerializer, CategorySerializer
 
@@ -37,6 +38,18 @@ class ProductViewSet(ModelViewSet):
         if like_obj.like:
             status_ = 'Лайк добавлен'
         return Response({'status': status_}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['POST'])
+    def rating(self, request, pk=None):
+        serializer = RatingSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        rating_obj, is_created = Rating.objects.get_or_create(
+            owner=request.user,
+            product=self.get_object()
+        )
+        rating_obj.rating = request.data['rating']
+        rating_obj.save()
+        return Response(request.data, status=status.HTTP_201_CREATED)
 
 
 class CategoryViewSet(mixins.CreateModelMixin,
