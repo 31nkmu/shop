@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from applications.feedback.models import Like
 from applications.product.models import Category, Product, Image
 
 
@@ -57,5 +58,11 @@ class ProductSerializer(serializers.ModelSerializer):
         for image in rep['images']:
             images.append(image['image'])
         rep['images'] = images
+        request = self.context.get('request')
+        rep['likes'] = Like.objects.filter(
+            owner=request.user,
+            product=instance,
+            like=True
+        ).count()
         return rep
 
