@@ -24,7 +24,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Python 24 Shop",
         default_version='v1',
-        description="Test description",
+        description="Online shop",
     ),
     public=True,
 )
